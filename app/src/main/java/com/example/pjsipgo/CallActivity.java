@@ -57,6 +57,10 @@ public class CallActivity extends AppCompatActivity implements SurfaceHolder.Cal
     ImageButton mBtnHangUp;
     @BindView(R.id.btnSwitchCamera)
     ImageButton mBtnSpeaker;
+
+    @BindView(R.id.buttonNumSharp)
+    Button mBtnSharp;
+
     @BindView(R.id.layoutConnected)
     RelativeLayout mLayoutConnected;
     @BindView(R.id.parent)
@@ -147,38 +151,48 @@ public class CallActivity extends AppCompatActivity implements SurfaceHolder.Cal
         context.startActivity(intent);
     }
 
-    @OnClick({R.id.buttonAccept, R.id.buttonHangup, R.id.btnCancel, R.id.btnMuteMic, R.id.btnHangUp, R.id.btnSwitchCamera})
+    @OnClick({R.id.buttonAccept, R.id.buttonHangup, R.id.btnCancel, R.id.btnMuteMic, R.id.btnHangUp,
+            R.id.btnSwitchCamera, R.id.buttonNumSharp, R.id.buttonNum1})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.buttonAccept:
-                //接听
+
                 SipServiceCommand.acceptIncomingCall(this, mAccountID, mCallID, mIsVideo);
                 break;
             case R.id.buttonHangup:
-                //拒绝
+
                 SipServiceCommand.declineIncomingCall(this, mAccountID, mCallID);
                 finish();
                 break;
             case R.id.btnCancel:
-                //取消呼叫
+
                 SipServiceCommand.hangUpActiveCalls(this, mAccountID);
                 finish();
                 break;
             case R.id.btnMuteMic:
-                //麦克风静音
+
                 micMute = !micMute;
                 SipServiceCommand.setCallMute(this, mAccountID, mCallID, micMute);
                 mBtnMuteMic.setSelected(micMute);
                 break;
             case R.id.btnHangUp:
-                //挂断
+
                 SipServiceCommand.hangUpCall(this, mAccountID, mCallID);
                 finish();
                 break;
             case R.id.btnSwitchCamera:
-                //切换摄像头
+
                 SipServiceCommand.switchVideoCaptureDevice(this,mAccountID,mCallID);
                 break;
+
+            case R.id.buttonNumSharp:
+                Toast.makeText(this, "Pressed #", Toast.LENGTH_LONG).show();
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "#");
+                break;
+            case R.id.buttonNum1:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "1");
+                break;
+
         }
     }
 

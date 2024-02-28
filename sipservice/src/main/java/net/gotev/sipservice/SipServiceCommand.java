@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.view.Surface;
 
 
+import com.voismart.crypto.BuildConfig;
+
 import org.pjsip.pjsua2.pjsip_inv_state;
 import org.pjsip.pjsua2.pjsip_status_code;
 

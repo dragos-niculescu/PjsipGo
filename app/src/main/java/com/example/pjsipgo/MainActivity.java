@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         requestPermissions();
         String callNumber = mEtCallNumer.getText().toString().trim();
         if (TextUtils.isEmpty(callNumber)) {
-            Toast.makeText(this, "请输入呼叫号码！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "no number！", Toast.LENGTH_LONG).show();
             return;
         }
         try {
