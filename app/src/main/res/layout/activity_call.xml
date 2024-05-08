@@ -68,31 +68,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:text="取消呼叫" />
+            android:text="Cancel" />
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/layoutConnected"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:visibility="visible">
 
-        <SurfaceView
-            android:id="@+id/svRemote"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="226dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-        <SurfaceView
-            android:id="@+id/svLocal"
-            android:layout_width="90dp"
-            android:layout_height="160dp" />
+
+            <SurfaceView
+                android:id="@+id/svRemote"
+                android:layout_width="0dp"
+                android:layout_height="176dp"
+                android:layout_weight="1" />
+
+            <SurfaceView
+                android:id="@+id/svLocal"
+                android:layout_width="0dp"
+                android:layout_height="176dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/svName"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            />
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="100dp"
+            android:layout_marginBottom="57dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -115,7 +132,7 @@
                 android:paddingEnd="20dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/hangup"
-                android:text="挂断" />
+                android:text="hangup" />
 
             <ImageButton
                 android:id="@+id/btnSwitchCamera"
@@ -129,13 +146,11 @@
         </LinearLayout>
 
         <GridLayout
-            android:layout_width="368dp"
-            android:layout_height="352dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/linearLayout"
             android:layout_alignParentEnd="true"
             android:layout_gravity="center"
-            android:layout_marginEnd="43dp"
-            android:layout_marginBottom="51dp"
             android:columnCount="3"
             android:rowCount="4">
 
@@ -238,5 +253,5 @@
 
         </GridLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

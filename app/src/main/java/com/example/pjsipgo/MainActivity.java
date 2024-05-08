@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         requestPermissions();
     }
 
-    //登录
     public void login(View view) {
         String server = mEtServer.getText().toString().trim();
         String account = mEtAccount.getText().toString().trim();
@@ -65,13 +64,13 @@ public class MainActivity extends AppCompatActivity {
         String port = mEtPort.getText().toString().trim();
 
         if (TextUtils.isEmpty(server) || TextUtils.isEmpty(account) || TextUtils.isEmpty(pwd) || TextUtils.isEmpty(port)) {
-            Toast.makeText(this, "请将信息填写完整！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "problem connecting!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         mAccount = new SipAccountData();
         mAccount.setHost(server);
-        mAccount.setRealm("*"); //realm指的是：sip:1004@192.168.2.243中的192.168.2.243
+        mAccount.setRealm("*");
         mAccount.setPort(Integer.parseInt(port));
         mAccount.setUsername(account);
         mAccount.setPassword(pwd);
@@ -79,12 +78,11 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "login: " + mAccountId);
     }
 
-    //语音呼叫
     public void audioCall(View view) {
         requestPermissions();
         String callNumber = mEtCallNumer.getText().toString().trim();
         if (TextUtils.isEmpty(callNumber)) {
-            Toast.makeText(this, "no number！", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "no number!", Toast.LENGTH_LONG).show();
             return;
         }
         try {
@@ -95,12 +93,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //视频呼叫
+
     public void videoCall(View view) {
         requestPermissions();
         String callNumber = mEtCallNumer.getText().toString().trim();
         if (TextUtils.isEmpty(callNumber)) {
-            Toast.makeText(this, "请输入呼叫号码！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "empty number!", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
@@ -111,31 +109,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 申请动态权限
-     */
+
     private void requestPermissions() {
         String[] permissions = {
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,// 写入权限
-                Manifest.permission.READ_EXTERNAL_STORAGE, // 读取权限
-                Manifest.permission.CAMERA,                // 相机权限
-                Manifest.permission.RECORD_AUDIO,          // 麦克风权限
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
         };
         if (!checkPermissionAllGranted(permissions)) {
-            // 一次请求多个权限, 如果其他有权限是已经授予的将会自动忽略掉
+
             ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS_STORAGE);
         } else {
 
         }
     }
 
-    /**
-     * 检查是否拥有指定的所有权限
-     */
     protected boolean checkPermissionAllGranted(String[] permissions) {
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                // 只要有一个权限没有被授予, 则直接返回 false
                 return false;
             }
         }
@@ -153,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             if (ok) {
-                Toast.makeText(MainActivity.this, "权限申请成功！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "permissions OK!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -174,11 +166,11 @@ public class MainActivity extends AppCompatActivity {
             super.onRegistration(accountID, registrationStateCode);
             Log.i(TAG, "onRegistration: ");
             if (registrationStateCode == pjsip_status_code.PJSIP_SC_OK) {
-                Toast.makeText(receiverContext, "登录成功，账号：" + accountID, Toast.LENGTH_SHORT).show();
+                Toast.makeText(receiverContext, "account OK:" + accountID, Toast.LENGTH_SHORT).show();
                 mLayoutCallOut.setVisibility(View.VISIBLE);
                 mLayoutLogin.setVisibility(View.GONE);
             } else {
-                Toast.makeText(receiverContext, "登录失败，code：" + registrationStateCode, Toast.LENGTH_SHORT).show();
+                Toast.makeText(receiverContext, "Error code:" + registrationStateCode, Toast.LENGTH_SHORT).show();
             }
         }
 

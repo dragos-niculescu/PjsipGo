@@ -2,6 +2,7 @@ package com.example.pjsipgo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -62,7 +63,7 @@ public class CallActivity extends AppCompatActivity implements SurfaceHolder.Cal
     Button mBtnSharp;
 
     @BindView(R.id.layoutConnected)
-    RelativeLayout mLayoutConnected;
+    LinearLayout mLayoutConnected;
     @BindView(R.id.parent)
     LinearLayout mParent;
 
@@ -76,6 +77,9 @@ public class CallActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private boolean mIsVideoConference;
     private boolean micMute;
 
+    private AudioManager audioManager;
+    private boolean bSpeakerOn;
+
     public static final int TYPE_INCOMING_CALL = 646;
     public static final int TYPE_OUT_CALL = 647;
     public static final int TYPE_CALL_CONNECTED = 648;
@@ -88,6 +92,8 @@ public class CallActivity extends AppCompatActivity implements SurfaceHolder.Cal
         ButterKnife.bind(this);
         registReceiver();
         initData();
+        audioManager= (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        bSpeakerOn = false;
     }
 
     private void registReceiver() {
@@ -106,7 +112,7 @@ public class CallActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
         showLayout(mType);
         mTextViewPeer.setText(String.format("%s\n%s", mRemoteUri, mDisplayName));
-        mTvOutCallInfo.setText(String.format("您正在呼叫 %s", mNumber));
+        mTvOutCallInfo.setText(String.format("Calling\n%s", mNumber));
 
         SurfaceHolder holder = mSvLocal.getHolder();
         holder.addCallback(this);
@@ -151,8 +157,12 @@ public class CallActivity extends AppCompatActivity implements SurfaceHolder.Cal
         context.startActivity(intent);
     }
 
-    @OnClick({R.id.buttonAccept, R.id.buttonHangup, R.id.btnCancel, R.id.btnMuteMic, R.id.btnHangUp,
-            R.id.btnSwitchCamera, R.id.buttonNumSharp, R.id.buttonNum1})
+    @OnClick({R.id.buttonAccept, R.id.buttonHangup, R.id.btnCancel,
+            R.id.btnMuteMic, R.id.btnHangUp,
+            R.id.btnSwitchCamera, R.id.buttonNumSharp, R.id.buttonNum1
+            , R.id.buttonNum2, R.id.buttonNum3, R.id.buttonNum4, R.id.buttonNum5
+            , R.id.buttonNum6, R.id.buttonNum7, R.id.buttonNum8, R.id.buttonNum9
+            , R.id.buttonNum0, R.id.buttonNumStar})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.buttonAccept:
@@ -182,16 +192,48 @@ public class CallActivity extends AppCompatActivity implements SurfaceHolder.Cal
                 break;
             case R.id.btnSwitchCamera:
 
-                SipServiceCommand.switchVideoCaptureDevice(this,mAccountID,mCallID);
+                bSpeakerOn = !bSpeakerOn;
+                audioManager.setSpeakerphoneOn(bSpeakerOn);
                 break;
 
             case R.id.buttonNumSharp:
                 Toast.makeText(this, "Pressed #", Toast.LENGTH_LONG).show();
                 SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "#");
                 break;
+            case R.id.buttonNumStar:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "*");
+                break;
             case R.id.buttonNum1:
                 SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "1");
                 break;
+            case R.id.buttonNum2:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "2");
+                break;
+            case R.id.buttonNum3:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "3");
+                break;
+            case R.id.buttonNum4:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "4");
+                break;
+            case R.id.buttonNum5:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "5");
+                break;
+            case R.id.buttonNum6:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "6");
+                break;
+            case R.id.buttonNum7:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "7");
+                break;
+            case R.id.buttonNum8:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "8");
+                break;
+            case R.id.buttonNum9:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "9");
+                break;
+            case R.id.buttonNum0:
+                SipServiceCommand.sendDTMF(this, mAccountID, mCallID, "0");
+                break;
+
 
         }
     }
@@ -241,34 +283,34 @@ public class CallActivity extends AppCompatActivity implements SurfaceHolder.Cal
         @Override
         public void onIncomingCall(String accountID, int callID, String displayName, String remoteUri, boolean isVideo) {
             super.onIncomingCall(accountID, callID, displayName, remoteUri, isVideo);
-            Toast.makeText(receiverContext, String.format("收到 [%s] 的来电", remoteUri), Toast.LENGTH_SHORT).show();
+            Toast.makeText(receiverContext, String.format("call from: [%s]", remoteUri), Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCallState(String accountID, int callID, pjsip_inv_state callStateCode, pjsip_status_code callStatusCode, long connectTimestamp, boolean isLocalHold, boolean isLocalMute, boolean isLocalVideoMute) {
             super.onCallState(accountID, callID, callStateCode, callStatusCode, connectTimestamp, isLocalHold, isLocalMute, isLocalVideoMute);
             if (pjsip_inv_state.PJSIP_INV_STATE_CALLING.equals(callStateCode)) {
-                //呼出
+
                 mTextViewCallState.setText("calling");
             } else if (pjsip_inv_state.PJSIP_INV_STATE_INCOMING.equals(callStateCode)) {
-                //来电
+
                 mTextViewCallState.setText("incoming");
             } else if (pjsip_inv_state.PJSIP_INV_STATE_EARLY.equals(callStateCode)) {
-                //响铃
+
                 mTextViewCallState.setText("early");
             } else if (pjsip_inv_state.PJSIP_INV_STATE_CONNECTING.equals(callStateCode)) {
-                //连接中
+
                 mTextViewCallState.setText("connecting");
             } else if (pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED.equals(callStateCode)) {
-                //连接成功
+
                 mTextViewCallState.setText("confirmed");
                 showLayout(TYPE_CALL_CONNECTED);
             } else if (pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED.equals(callStateCode)) {
-                //断开连接
+
                 finish();
             } else if (pjsip_inv_state.PJSIP_INV_STATE_NULL.equals(callStateCode)) {
-                //未知错误
-                Toast.makeText(receiverContext, "未知错误", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(receiverContext, "Null state", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }

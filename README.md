@@ -8,3 +8,7 @@ A simple sip talk demo based on pjsip!
  - fixed gradle and studio for 2024
  - added DTMF buttons 
  - tested echo with thetestcall@getonsip.com and 904@mouselike.org 
+ - changed video layout 
+ - removed chinese characters 
+ - added speaker toggle 
+ - 
